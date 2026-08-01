@@ -1,151 +1,192 @@
 import streamlit as st
-import pandas as pd
-import math
-from pathlib import Path
 
-# Set the title and favicon that appear in the Browser's tab bar.
-st.set_page_config(
-    page_title='GDP dashboard',
-    page_icon=':earth_americas:', # This is an emoji shortcode. Could be a URL too.
-)
+from CoolProp.CoolProp import PropsSI
 
-# -----------------------------------------------------------------------------
-# Declare some useful functions.
+ 
+st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout="centered")
 
-@st.cache_data
-def get_gdp_data():
-    """Grab GDP data from a CSV file.
+st.title("Hydrogen Tubetrailer Transfer Calculator")
 
-    This uses caching to avoid having to read the file every time. If we were
-    reading from an HTTP endpoint instead of a file, it's a good idea to set
-    a maximum age to the cache with the TTL argument: @st.cache_data(ttl='1d')
+st.write(
+
     """
 
-    # Instead of a CSV on disk, you could read from an HTTP endpoint here too.
-    DATA_FILENAME = Path(__file__).parent/'data/gdp_data.csv'
-    raw_gdp_df = pd.read_csv(DATA_FILENAME)
+    Calculate hydrogen mass in a constant-volume tubetrailer before and after a transfer process.
 
-    MIN_YEAR = 1960
-    MAX_YEAR = 2022
+    The app uses CoolProp to compute hydrogen density from pressure and temperature.
 
-    # The data above has columns like:
-    # - Country Name
-    # - Country Code
-    # - [Stuff I don't care about]
-    # - GDP for 1960
-    # - GDP for 1961
-    # - GDP for 1962
-    # - ...
-    # - GDP for 2022
-    #
-    # ...but I want this instead:
-    # - Country Name
-    # - Country Code
-    # - Year
-    # - GDP
-    #
-    # So let's pivot all those year-columns into two: Year and GDP
-    gdp_df = raw_gdp_df.melt(
-        ['Country Code'],
-        [str(x) for x in range(MIN_YEAR, MAX_YEAR + 1)],
-        'Year',
-        'GDP',
-    )
+    """
 
-    # Convert years from string to integers
-    gdp_df['Year'] = pd.to_numeric(gdp_df['Year'])
-
-    return gdp_df
-
-gdp_df = get_gdp_data()
-
-# -----------------------------------------------------------------------------
-# Draw the actual page
-
-# Set the title that appears at the top of the page.
-'''
-# :earth_americas: GDP dashboard
-
-Browse GDP data from the [World Bank Open Data](https://data.worldbank.org/) website. As you'll
-notice, the data only goes to 2022 right now, and datapoints for certain years are often missing.
-But it's otherwise a great (and did I mention _free_?) source of data.
-'''
-
-# Add some spacing
-''
-''
-
-min_value = gdp_df['Year'].min()
-max_value = gdp_df['Year'].max()
-
-from_year, to_year = st.slider(
-    'Which years are you interested in?',
-    min_value=min_value,
-    max_value=max_value,
-    value=[min_value, max_value])
-
-countries = gdp_df['Country Code'].unique()
-
-if not len(countries):
-    st.warning("Select at least one country")
-
-selected_countries = st.multiselect(
-    'Which countries would you like to view?',
-    countries,
-    ['DEU', 'FRA', 'GBR', 'BRA', 'MEX', 'JPN'])
-
-''
-''
-''
-
-# Filter the data
-filtered_gdp_df = gdp_df[
-    (gdp_df['Country Code'].isin(selected_countries))
-    & (gdp_df['Year'] <= to_year)
-    & (from_year <= gdp_df['Year'])
-]
-
-st.header('GDP over time', divider='gray')
-
-''
-
-st.line_chart(
-    filtered_gdp_df,
-    x='Year',
-    y='GDP',
-    color='Country Code',
 )
 
-''
-''
+ 
 
+st.header("Inputs")
 
-first_year = gdp_df[gdp_df['Year'] == from_year]
-last_year = gdp_df[gdp_df['Year'] == to_year]
+ 
 
-st.header(f'GDP in {to_year}', divider='gray')
+volume = st.number_input(
 
-''
+    "Tubetrailer volume [m³]",
 
-cols = st.columns(4)
+    min_value=0.001,
 
-for i, country in enumerate(selected_countries):
-    col = cols[i % len(cols)]
+    value=40.0,
 
-    with col:
-        first_gdp = first_year[first_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
-        last_gdp = last_year[last_year['Country Code'] == country]['GDP'].iat[0] / 1000000000
+    step=0.1
 
-        if math.isnan(first_gdp):
-            growth = 'n/a'
-            delta_color = 'off'
-        else:
-            growth = f'{last_gdp / first_gdp:,.2f}x'
-            delta_color = 'normal'
+)
 
-        st.metric(
-            label=f'{country} GDP',
-            value=f'{last_gdp:,.0f}B',
-            delta=growth,
-            delta_color=delta_color
-        )
+ 
+
+col1, col2 = st.columns(2)
+
+ 
+
+with col1:
+
+    st.subheader("Initial state")
+
+    T_initial_C = st.number_input(
+
+        "Initial temperature [°C]",
+
+        value=15.0,
+
+        step=0.1,
+
+        key="T_initial"
+
+    )
+
+    P_initial_bar = st.number_input(
+
+        "Initial pressure [bar]",
+
+        min_value=0.0,
+
+        value=300.0,
+
+        step=1.0,
+
+        key="P_initial"
+
+    )
+
+ 
+
+with col2:
+
+    st.subheader("Final state")
+
+    T_final_C = st.number_input(
+
+        "Final temperature [°C]",
+
+        value=15.0,
+
+        step=0.1,
+
+        key="T_final"
+
+    )
+
+    P_final_bar = st.number_input(
+
+        "Final pressure [bar]",
+
+        min_value=0.0,
+
+        value=50.0,
+
+        step=1.0,
+
+        key="P_final"
+
+    )
+
+ 
+
+# Unit conversions
+
+T_initial_K = T_initial_C + 273.15
+
+T_final_K = T_final_C + 273.15
+
+P_initial_Pa = P_initial_bar * 1e5
+
+P_final_Pa = P_final_bar * 1e5
+
+ 
+
+st.header("Results")
+
+ 
+
+if st.button("Calculate"):
+
+    try:
+
+        # Density from CoolProp
+
+        rho_initial = PropsSI("D", "T", T_initial_K, "P", P_initial_Pa, "Hydrogen")
+
+        rho_final = PropsSI("D", "T", T_final_K, "P", P_final_Pa, "Hydrogen")
+
+ 
+
+        # Mass calculations
+
+        m_initial = rho_initial * volume
+
+        m_final = rho_final * volume
+
+        m_transferred = m_initial - m_final
+
+ 
+
+        st.success("Calculation completed successfully.")
+
+ 
+
+        col3, col4, col5 = st.columns(3)
+
+ 
+
+        with col3:
+
+            st.metric("Initial density", f"{rho_initial:.4f} kg/m³")
+
+            st.metric("Initial mass", f"{m_initial:.4f} kg")
+
+ 
+
+        with col4:
+
+            st.metric("Final density", f"{rho_final:.4f} kg/m³")
+
+            st.metric("Final mass", f"{m_final:.4f} kg")
+
+ 
+
+        with col5:
+
+            st.metric("Transferred H₂ mass", f"{m_transferred:.4f} kg")
+
+ 
+
+        st.subheader("Calculation details")
+
+        st.write(f"**Volume:** {volume:.4f} m³")
+
+        st.write(f"**Initial state:** {T_initial_C:.2f} °C, {P_initial_bar:.2f} bar")
+
+        st.write(f"**Final state:** {T_final_C:.2f} °C, {P_final_bar:.2f} bar")
+
+ 
+
+    except Exception as e:
+
+        st.error(f"Error during calculation: {e}")
+
+        st.info("Please check that the pressure and temperature inputs are within valid CoolProp ranges for hydrogen.")
