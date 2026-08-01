@@ -8,7 +8,7 @@ st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout
 st.image(
     "MVE_Logo.png",
     caption="This application is owned and managed by MV Energietechniek.",
-    use_container_width=True
+    width=100
 )
 
 st.title("Hydrogen Tubetrailer Transfer Calculator")
@@ -196,3 +196,6 @@ if st.button("Calculate"):
         st.error(f"Error during calculation: {e}")
 
         st.info("Please check that the pressure and temperature inputs are within valid CoolProp ranges for hydrogen.")
+
+st.markdown("---")
+st.caption("© 2026 MV Energietechniek. All rights reserved.")
