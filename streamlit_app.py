@@ -5,6 +5,12 @@ from CoolProp.CoolProp import PropsSI
  
 st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout="centered")
 
+st.image(
+    "MVE_logo.png",
+    caption="This application is owned and managed by MV Energietechniek.",
+    use_container_width=True
+)
+
 st.title("Hydrogen Tubetrailer Transfer Calculator")
 
 st.write(
