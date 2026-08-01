@@ -8,7 +8,7 @@ st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout
 st.image(
     "MVE_Logo.png",
     caption="This application is owned and managed by MV Energietechniek.",
-    width=100
+    use_container_width=True
 )
 
 st.title("Hydrogen Tubetrailer Transfer Calculator")
