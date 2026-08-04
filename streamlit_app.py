@@ -2,6 +2,18 @@ import streamlit as st
 
 from CoolProp.CoolProp import PropsSI
 
+ 
+
+# -----------------------------
+
+# Page config must come first
+
+# -----------------------------
+
+st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout="centered")
+
+ 
+
 # -----------------------------
 
 # Language setup
@@ -18,6 +30,8 @@ def toggle_language():
 
     st.session_state.lang = "nl" if st.session_state.lang == "en" else "en"
 
+    st.rerun()
+
  
 
 translations = {
@@ -31,6 +45,8 @@ translations = {
         "description": """
 
 Calculate hydrogen mass in a constant-volume tubetrailer before and after a transfer process.
+
+ 
 
 The app uses CoolProp to compute hydrogen density from pressure and temperature.
 
@@ -80,7 +96,9 @@ The app uses CoolProp to compute hydrogen density from pressure and temperature.
 
         "error": "Error during calculation",
 
-        "error_info": "Please check that the pressure and temperature inputs are within valid CoolProp ranges for hydrogen."
+        "error_info": "Please check that the pressure and temperature inputs are within valid CoolProp ranges for hydrogen.",
+
+        "logo_caption": "This application is owned and managed by MV Energietechniek."
 
     },
 
@@ -93,6 +111,8 @@ The app uses CoolProp to compute hydrogen density from pressure and temperature.
         "description": """
 
 Bereken de waterstofmassa in een tubetrailer met constant volume voor en na een overdrachtsproces.
+
+ 
 
 De app gebruikt CoolProp om de waterstofdichtheid te berekenen op basis van druk en temperatuur.
 
@@ -142,7 +162,9 @@ De app gebruikt CoolProp om de waterstofdichtheid te berekenen op basis van druk
 
         "error": "Fout tijdens berekening",
 
-        "error_info": "Controleer of de ingevoerde druk- en temperatuurwaarden binnen het geldige CoolProp-bereik voor waterstof vallen."
+        "error_info": "Controleer of de ingevoerde druk- en temperatuurwaarden binnen het geldige CoolProp-bereik voor waterstof vallen.",
+
+        "logo_caption": "Deze applicatie is eigendom van en wordt beheerd door MV Energietechniek."
 
     }
 
@@ -164,42 +186,43 @@ st.button(t["language_button"], on_click=toggle_language)
 
  
 
-# Refresh translation after button click
+# Refresh translation after possible rerun
 
 t = translations[st.session_state.lang]
 
  
-st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout="centered")
+
+# -----------------------------
+
+# UI
+
+# -----------------------------
 
 st.image(
+
     "MVE_Logo.png",
-    caption="This application is owned and managed by MV Energietechniek.",
+
+    caption=t["logo_caption"],
+
     use_container_width=True
-)
-
-st.title("Hydrogen Tubetrailer Transfer Calculator")
-
-st.write(
-
-    """
-
-    Calculate hydrogen mass in a constant-volume tubetrailer before and after a transfer process.
-
-    The app uses CoolProp to compute hydrogen density from pressure and temperature.
-
-    """
 
 )
 
  
 
-st.header("Inputs")
+st.title(t["title"])
+
+st.write(t["description"])
+
+ 
+
+st.header(t["inputs"])
 
  
 
 volume = st.number_input(
 
-    "Tubetrailer volume [m³]",
+    t["volume"],
 
     min_value=0.001,
 
@@ -217,11 +240,11 @@ col1, col2 = st.columns(2)
 
 with col1:
 
-    st.subheader("Initial state")
+    st.subheader(t["initial_state"])
 
     T_initial_C = st.number_input(
 
-        "Initial temperature [°C]",
+        t["initial_temperature"],
 
         value=15.0,
 
@@ -233,7 +256,7 @@ with col1:
 
     P_initial_bar = st.number_input(
 
-        "Initial pressure [bar]",
+        t["initial_pressure"],
 
         min_value=0.0,
 
@@ -249,11 +272,11 @@ with col1:
 
 with col2:
 
-    st.subheader("Final state")
+    st.subheader(t["final_state"])
 
     T_final_C = st.number_input(
 
-        "Final temperature [°C]",
+        t["final_temperature"],
 
         value=15.0,
 
@@ -265,7 +288,7 @@ with col2:
 
     P_final_bar = st.number_input(
 
-        "Final pressure [bar]",
+        t["final_pressure"],
 
         min_value=0.0,
 
@@ -291,23 +314,19 @@ P_final_Pa = P_final_bar * 1e5
 
  
 
-st.header("Results")
+st.header(t["results"])
 
  
 
-if st.button("Calculate"):
+if st.button(t["calculate"]):
 
     try:
-
-        # Density from CoolProp
 
         rho_initial = PropsSI("D", "T", T_initial_K, "P", P_initial_Pa, "Hydrogen")
 
         rho_final = PropsSI("D", "T", T_final_K, "P", P_final_Pa, "Hydrogen")
 
  
-
-        # Mass calculations
 
         m_initial = rho_initial * volume
 
@@ -317,7 +336,7 @@ if st.button("Calculate"):
 
  
 
-        st.success("Calculation completed successfully.")
+        st.success(t["success"])
 
  
 
@@ -327,41 +346,44 @@ if st.button("Calculate"):
 
         with col3:
 
-            st.metric("Initial density", f"{rho_initial:.4f} kg/m³")
+            st.metric(t["initial_density"], f"{rho_initial:.4f} kg/m³")
 
-            st.metric("Initial mass", f"{m_initial:.4f} kg")
+            st.metric(t["initial_mass"], f"{m_initial:.4f} kg")
 
  
 
         with col4:
 
-            st.metric("Final density", f"{rho_final:.4f} kg/m³")
+            st.metric(t["final_density"], f"{rho_final:.4f} kg/m³")
 
-            st.metric("Final mass", f"{m_final:.4f} kg")
+            st.metric(t["final_mass"], f"{m_final:.4f} kg")
 
  
 
         with col5:
 
-            st.metric("Transferred H₂ mass", f"{m_transferred:.4f} kg")
+            st.metric(t["transferred_mass"], f"{m_transferred:.4f} kg")
 
  
 
-        st.subheader("Calculation details")
+        st.subheader(t["calculation_details"])
 
-        st.write(f"**Volume:** {volume:.4f} m³")
+        st.write(f"**{t['volume_label']}:** {volume:.4f} m³")
 
-        st.write(f"**Initial state:** {T_initial_C:.2f} °C, {P_initial_bar:.2f} bar")
+        st.write(f"**{t['initial_state_label']}:** {T_initial_C:.2f} °C, {P_initial_bar:.2f} bar")
 
-        st.write(f"**Final state:** {T_final_C:.2f} °C, {P_final_bar:.2f} bar")
+        st.write(f"**{t['final_state_label']}:** {T_final_C:.2f} °C, {P_final_bar:.2f} bar")
 
  
 
     except Exception as e:
 
-        st.error(f"Error during calculation: {e}")
+        st.error(f"{t['error']}: {e}")
 
-        st.info("Please check that the pressure and temperature inputs are within valid CoolProp ranges for hydrogen.")
+        st.info(t["error_info"])
+
+ 
 
 st.markdown("---")
+
 st.caption("© 2026 MV Energietechniek. All rights reserved.")
