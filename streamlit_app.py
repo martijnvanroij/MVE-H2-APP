@@ -2,6 +2,172 @@ import streamlit as st
 
 from CoolProp.CoolProp import PropsSI
 
+# -----------------------------
+
+# Language setup
+
+# -----------------------------
+
+if "lang" not in st.session_state:
+
+    st.session_state.lang = "en"
+
+ 
+
+def toggle_language():
+
+    st.session_state.lang = "nl" if st.session_state.lang == "en" else "en"
+
+ 
+
+translations = {
+
+    "en": {
+
+        "page_title": "Hydrogen Tubetrailer Transfer Calculator",
+
+        "title": "Hydrogen Tubetrailer Transfer Calculator",
+
+        "description": """
+
+Calculate hydrogen mass in a constant-volume tubetrailer before and after a transfer process.
+
+The app uses CoolProp to compute hydrogen density from pressure and temperature.
+
+""",
+
+        "language_button": "Switch to Dutch",
+
+        "inputs": "Inputs",
+
+        "volume": "Tubetrailer volume [m³]",
+
+        "initial_state": "Initial state",
+
+        "final_state": "Final state",
+
+        "initial_temperature": "Initial temperature [°C]",
+
+        "initial_pressure": "Initial pressure [bar]",
+
+        "final_temperature": "Final temperature [°C]",
+
+        "final_pressure": "Final pressure [bar]",
+
+        "results": "Results",
+
+        "calculate": "Calculate",
+
+        "success": "Calculation completed successfully.",
+
+        "initial_density": "Initial density",
+
+        "initial_mass": "Initial mass",
+
+        "final_density": "Final density",
+
+        "final_mass": "Final mass",
+
+        "transferred_mass": "Transferred H₂ mass",
+
+        "calculation_details": "Calculation details",
+
+        "volume_label": "Volume",
+
+        "initial_state_label": "Initial state",
+
+        "final_state_label": "Final state",
+
+        "error": "Error during calculation",
+
+        "error_info": "Please check that the pressure and temperature inputs are within valid CoolProp ranges for hydrogen."
+
+    },
+
+    "nl": {
+
+        "page_title": "Waterstof Tubetrailer Overdrachtscalculator",
+
+        "title": "Waterstof Tubetrailer Overdrachtscalculator",
+
+        "description": """
+
+Bereken de waterstofmassa in een tubetrailer met constant volume voor en na een overdrachtsproces.
+
+De app gebruikt CoolProp om de waterstofdichtheid te berekenen op basis van druk en temperatuur.
+
+""",
+
+        "language_button": "Schakel naar Engels",
+
+        "inputs": "Invoer",
+
+        "volume": "Tubetrailer volume [m³]",
+
+        "initial_state": "Begintoestand",
+
+        "final_state": "Eindtoestand",
+
+        "initial_temperature": "Begintemperatuur [°C]",
+
+        "initial_pressure": "Begindruk [bar]",
+
+        "final_temperature": "Eindtemperatuur [°C]",
+
+        "final_pressure": "Einddruk [bar]",
+
+        "results": "Resultaten",
+
+        "calculate": "Berekenen",
+
+        "success": "Berekening succesvol uitgevoerd.",
+
+        "initial_density": "Begindichtheid",
+
+        "initial_mass": "Beginmassa",
+
+        "final_density": "Einddichtheid",
+
+        "final_mass": "Eindmassa",
+
+        "transferred_mass": "Overgedragen H₂-massa",
+
+        "calculation_details": "Berekeningsdetails",
+
+        "volume_label": "Volume",
+
+        "initial_state_label": "Begintoestand",
+
+        "final_state_label": "Eindtoestand",
+
+        "error": "Fout tijdens berekening",
+
+        "error_info": "Controleer of de ingevoerde druk- en temperatuurwaarden binnen het geldige CoolProp-bereik voor waterstof vallen."
+
+    }
+
+}
+
+ 
+
+t = translations[st.session_state.lang]
+
+ 
+
+# -----------------------------
+
+# Language toggle button
+
+# -----------------------------
+
+st.button(t["language_button"], on_click=toggle_language)
+
+ 
+
+# Refresh translation after button click
+
+t = translations[st.session_state.lang]
+
  
 st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout="centered")
 
