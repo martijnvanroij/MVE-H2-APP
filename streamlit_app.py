@@ -48,7 +48,7 @@ Calculate hydrogen mass in a constant-volume tubetrailer before and after a tran
 
  
 
-The app uses CoolProp to compute hydrogen density from pressure and temperature.
+The app uses thermodynamic models in CoolProp to compute hydrogen density from pressure and temperature.
 
 """,
 
@@ -104,17 +104,17 @@ The app uses CoolProp to compute hydrogen density from pressure and temperature.
 
     "nl": {
 
-        "page_title": "Waterstof Tubetrailer Overdrachtscalculator",
+        "page_title": "Waterstof Tubetrailer Calculator",
 
-        "title": "Waterstof Tubetrailer Overdrachtscalculator",
+        "title": "Waterstof Tubetrailer Calculator",
 
         "description": """
 
-Bereken de waterstofmassa in een tubetrailer met constant volume voor en na een overdrachtsproces.
+Bereken de waterstofmassa in een tubetrailer met constant volume voor en na het vullen of legen van een H2 tubetrailer.
 
  
 
-De app gebruikt CoolProp om de waterstofdichtheid te berekenen op basis van druk en temperatuur.
+De app gebruikt thermodynamische modellen in CoolProp om de waterstofdichtheid te berekenen op basis van druk en temperatuur.
 
 """,
 
