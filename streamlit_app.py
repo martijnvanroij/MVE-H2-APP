@@ -10,7 +10,7 @@ from CoolProp.CoolProp import PropsSI
 
 # -----------------------------
 
-st.set_page_config(page_title="Hydrogen Tubetrailer Transfer Calculator", layout="centered")
+st.set_page_config(page_title="Hydrogen Property Calculator", layout="centered")
 
  
 
@@ -38,17 +38,21 @@ translations = {
 
     "en": {
 
-        "page_title": "Hydrogen Tubetrailer Transfer Calculator",
+        "page_title": "Hydrogen Property Calculator",
 
-        "title": "Hydrogen Tubetrailer Transfer Calculator",
+        "title": "Hydrogen Property Calculator",
 
         "description": """
 
-Calculate hydrogen mass in a constant-volume tubetrailer before and after a transfer process.
+Calculate hydrogen mass in a constant-volume based on pressure and temperature in the volume.
 
- 
+The app uses thermodynamic models in CoolProp to compute hydrogen density from pressure and temperature. For more
 
-The app uses thermodynamic models in CoolProp to compute hydrogen density from pressure and temperature.
+information regarding the thermodynamic models can be found in the support document.
+
+The mass H2 in the volume is calculated for pure (100%) hydrogen. A pressure value of at least 1e-7 bar should be 
+
+inserted due to the model limits.
 
 """,
 
@@ -56,7 +60,7 @@ The app uses thermodynamic models in CoolProp to compute hydrogen density from p
 
         "inputs": "Inputs",
 
-        "volume": "Tubetrailer volume [m³]",
+        "volume": "Constant volume [m³]",
 
         "initial_state": "Initial state",
 
@@ -84,7 +88,7 @@ The app uses thermodynamic models in CoolProp to compute hydrogen density from p
 
         "final_mass": "Final mass",
 
-        "transferred_mass": "Transferred H₂ mass",
+        "transferred_mass": "H₂ mass difference between initial and final state",
 
         "calculation_details": "Calculation details",
 
@@ -104,25 +108,28 @@ The app uses thermodynamic models in CoolProp to compute hydrogen density from p
 
     "nl": {
 
-        "page_title": "Waterstof Tubetrailer Calculator",
+        "page_title": "Waterstof Eigenschap Calculator",
 
-        "title": "Waterstof Tubetrailer Calculator",
+        "title": "Waterstof Eigenschap Calculator",
 
         "description": """
 
-Bereken de waterstofmassa in een tubetrailer met constant volume voor en na het vullen of legen van een H2 tubetrailer.
+Bereken de waterstofmassa in een volume met constant volume op basis van de druk en temperatuur in dat volume.
 
- 
+De app gebruikt thermodynamische modellen van CoolProp om de waterstofdichtheid te berekenen op basis van druk en temperatuur.
 
-De app gebruikt thermodynamische modellen in CoolProp om de waterstofdichtheid te berekenen op basis van druk en temperatuur.
+Meer informatie over de thermodynamische modellen is te vinden in het ondersteuningsdocument.
 
+De H2-massa in het volume wordt berekend voor zuivere (100%) waterstof. Vanwege de beperkingen van het model
+
+moet een drukwaarde van ten minste 1e-7 bar worden ingevoerd.
 """,
 
         "language_button": "Schakel naar Engels",
 
         "inputs": "Invoer",
 
-        "volume": "Tubetrailer volume [m³]",
+        "volume": "Constant volume [m³]",
 
         "initial_state": "Begintoestand",
 
@@ -150,7 +157,7 @@ De app gebruikt thermodynamische modellen in CoolProp om de waterstofdichtheid t
 
         "final_mass": "Eindmassa",
 
-        "transferred_mass": "Overgedragen H₂-massa",
+        "transferred_mass": "Verschil H₂-massa",
 
         "calculation_details": "Berekeningsdetails",
 
